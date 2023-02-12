@@ -47,7 +47,7 @@ async function getRoutinesWithoutActivities() {
 async function getAllRoutines() {
   try {
     const { rows: routines } = await client.query(`
-    SELECT routines.*, u.username AS "creatorName"
+    SELECT DISTINCT routines.*, u.username AS "creatorName"
     FROM routines
     JOIN 
     users AS u

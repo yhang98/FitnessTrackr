@@ -64,9 +64,9 @@ async function updateRoutineActivity ({id, ...fields}) {
       Object.values(fields)
     );
     return routineActivity;
-  } catch (err) {
+  } catch (error) {
     console.error("error updating routine activities");
-    throw err;
+    throw error;
   }
 }
 
@@ -77,10 +77,10 @@ async function destroyRoutineActivity(id) {
     WHERE id=$1
     RETURNING *;
     `, [id]);
-    return routine_activity
+    return routine_activity  
+
 
     
-
   } catch(error){
     console.error("error destroying routine activity");
     throw error
