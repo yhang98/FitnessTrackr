@@ -1,20 +1,6 @@
 const client = require("./client");
-async function attachActivitiesToRoutines(routines) {
+const { attachActivitiesToRoutines } = require("./activities");
 
-  await Promise.all(routines.map(async (routine) => {
-    const { rows: activities } = await client.query(`
-    SELECT DISTINCT activities.*, ra.duration, ra.count, ra."routineId", ra.id AS "routineActivityId"
-    FROM activities
-    JOIN routine_activities as ra
-    ON ra."activityId"=activities.id
-    WHERE ra."routineId"=$1;
-    `,[routine.id])
-    routine.activities = activities 
-  }))
-
-  return routines;
-
-}
 async function getRoutineById(id) {
   try {
     const {
@@ -82,7 +68,7 @@ async function getPublicRoutinesByUser({ username }) {
   try {
     const { rows } = await client.query(
       `
-    SELECT routines.*, users.username AS "creatorName"
+    SELECT DISTINCT routines.*, users.username AS "creatorName"
     FROM routines
     INNER JOIN users
     ON routines."creatorId"=users.id
@@ -101,7 +87,7 @@ async function getPublicRoutinesByUser({ username }) {
 async function getAllPublicRoutines() {
   try {
     const { rows } = await client.query(`
-    SELECT routines.*, users.username AS "creatorName" 
+    SELECT DISTINCT routines.*, users.username AS "creatorName" 
     FROM routines
     JOIN users ON routines."creatorId" = users.id
     WHERE "isPublic" = TRUE;  
@@ -115,7 +101,7 @@ async function getAllPublicRoutines() {
 async function getPublicRoutinesByActivity({ id }) {
   try {
     const { rows } = await client.query(`
-    SELECT routines.*, users.username AS "creatorName" 
+    SELECT DISTINCT routines.*, users.username AS "creatorName" 
     FROM routines 
     JOIN users ON routines."creatorId"=users.id
     JOIN routine_activities ON routine_activities."routineId"=routines.id

@@ -91,36 +91,18 @@ async function createActivity({ name, description }) {
       rows: [activity],
     } = await client.query(
       `
-      INSERT INTO activities(name, description) 
-      VALUES($1, $2) 
-      ON CONFLICT (name) DO NOTHING 
-      RETURNING *;
-    `,
+      INSERT INTO activities (name, description)
+      VALUES($1, $2)
+      ON CONFLICT (name) DO NOTHING
+      RETURNING *;`,
       [name, description]
-    );
-
-    return activity;
+    )
+  return activity;
   } catch (error) {
-    console.error('error creating activities')
+    console.error("erroro updating activities");
     throw error;
   }
 }
-/*async function attachActivitiesToRoutines(routines) {
-  const routinesToReturn = {...routines};
-  for(const routine of routinesToReturn ){
-
-    const {rows: activities} = await client.query(
-       `
-     SELECT *
-     FROM activities
-     JOIN  routine_activities ON activities.id=routine_activities."activityId"
-     WHERE routine_activities."routineId"=$1
-     `, [routine.id]);
-     routine.activities = activities;
-  }
-  return routinesToReturn
-    
-}*/
 
 // don't try to update the id
 // do update the name and description
